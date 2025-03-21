@@ -6,6 +6,7 @@ import com.example.memo.entity.Memo;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,6 +70,12 @@ public class MemoController {
 
     return new MemoResponseDto(memo);
 
+  }
+
+  // 삭제이기 때문에 void
+  @DeleteMapping("/{id}")
+  public void deleteMemo(@PathVariable Long id) {
+    memoList.remove(id);
   }
 
 }
