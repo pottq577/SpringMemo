@@ -77,15 +77,25 @@ public class MemoController {
   }
 
   @PutMapping("/{id}")
-  public MemoResponseDto updateMemoById(
+  public ResponseEntity<MemoResponseDto> updateMemoById(
       @PathVariable Long id,
       @RequestBody MemoRequestDto dto
   ) {
     Memo memo = memoList.get(id);
 
+    // 해당 식별자를 가진 메모가 없으면 404 NOT FOUND 반환
+    if (memo == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // 제목이나 내용이 없으면 400 BAD REQUEST 반환
+    if (dto.getTitle() == null || dto.getContents() == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     memo.update(dto);
 
-    return new MemoResponseDto(memo);
+    return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
 
   }
 
