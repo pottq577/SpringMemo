@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -94,6 +95,31 @@ public class MemoController {
     }
 
     memo.update(dto);
+
+    return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
+
+  }
+
+  // 일부 수정이기 때문에 @PatchMapping 사용
+  @PatchMapping("/{id}")
+  public ResponseEntity<MemoResponseDto> updateTitle(
+      @PathVariable Long id,
+      @RequestBody MemoRequestDto dto
+  ) {
+
+    Memo memo = memoList.get(id);
+
+    // 해당 식별자를 가진 메모가 없으면 404 NOT FOUND 반환
+    if (memo == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // 내용이 있거나, 제목이 null이면 400 BAD REQUEST 반환
+    if (dto.getTitle() == null || dto.getContents() != null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    memo.updateTitle(dto);
 
     return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
 
