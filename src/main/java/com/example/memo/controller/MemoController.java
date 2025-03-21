@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,12 +47,27 @@ public class MemoController {
   // @RequestMapping으로 이미 "/memos" prefix가 정해져있기 때문에 식별자만 지정
   @GetMapping("/{id}")
   // 식별자를 파라미터로 바인딩할 때 @PathVariable 사용
-  public MemoResponseDto findMemoById(@PathVariable Long id){
+  public MemoResponseDto findMemoById(@PathVariable Long id) {
 
     Memo memo = memoList.get(id);
     return new MemoResponseDto((memo));
 
 //    return new MemoResponseDto(memoList.get(id));
+
+  }
+
+  // 전체 수정을 위해 @PutMapping 사용
+  @PutMapping("/{id}")
+  public MemoResponseDto updateMemoById(
+      @PathVariable Long id,
+      // id뿐만 아니라 어떤 데이터를 수정할 지, 그 데이터도 요청받아야 함
+      @RequestBody MemoRequestDto dto
+  ) {
+    Memo memo = memoList.get(id);
+
+    memo.update(dto);
+
+    return new MemoResponseDto(memo);
 
   }
 
