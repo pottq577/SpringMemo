@@ -3,8 +3,10 @@ package com.example.memo.controller;
 import com.example.memo.dto.MemoRequestDto;
 import com.example.memo.dto.MemoResponseDto;
 import com.example.memo.entity.Memo;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,30 @@ public class MemoController {
     return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.CREATED);
 
   }
+
+  // 아무것도 없으면 @RequestMapping의 url이 mapping됨
+  @GetMapping
+  public List<MemoResponseDto> findAllMemos() {
+
+    // 리스트 초기화
+    List<MemoResponseDto> responseList = new ArrayList<>();
+
+    // MashMap<Memo> -> 전체 조회 -> List<MemoResponseDto>
+    // 1. 반복문 사용
+    for (Memo memo : memoList.values()) {
+      MemoResponseDto responseDto = new MemoResponseDto(memo);
+      responseList.add(responseDto);
+    }
+
+    // 2. 스트림 사용
+//    responseList = memoList.values().stream()
+//                                    .map(MemoResponseDto::new)
+//                                    .toList();
+
+    return responseList;
+
+  }
+
 
   @GetMapping("/{id}")
   public MemoResponseDto findMemoById(@PathVariable Long id) {
