@@ -63,10 +63,16 @@ public class MemoController {
 
 
   @GetMapping("/{id}")
-  public MemoResponseDto findMemoById(@PathVariable Long id) {
+  public ResponseEntity<MemoResponseDto> findMemoById(@PathVariable Long id) {
 
     Memo memo = memoList.get(id);
-    return new MemoResponseDto((memo));
+
+    // 해당 식별자를 가진 메모가 없으면 404 NOT FOUND 반환
+    if (memo == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return new ResponseEntity<>(new MemoResponseDto(memo), HttpStatus.OK);
 
   }
 
