@@ -6,6 +6,8 @@ import com.example.memo.entity.Memo;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +27,7 @@ public class MemoController {
   @PostMapping
   public MemoResponseDto createMemo(@RequestBody MemoRequestDto dto) {
 
-    // 식별자가 1씩 증가하도록 만듦
+    // 식별자(id)가 1씩 증가하도록 만듦
     Long memoId = memoList.isEmpty() ? 1 : Collections.max(memoList.keySet()) + 1;
 
     // 요청받은 데이터로 Memo 객체 생성
@@ -37,6 +39,19 @@ public class MemoController {
     memoList.put(memoId, memo);
 
     return new MemoResponseDto(memo);
+
+  }
+
+  // 조회이기 때문에 @GetMapping 사용
+  // @RequestMapping으로 이미 "/memos" prefix가 정해져있기 때문에 식별자만 지정
+  @GetMapping("/{id}")
+  // 식별자를 파라미터로 바인딩할 때 @PathVariable 사용
+  public MemoResponseDto findMemoById(@PathVariable Long id){
+
+    Memo memo = memoList.get(id);
+    return new MemoResponseDto((memo));
+
+//    return new MemoResponseDto(memoList.get(id));
 
   }
 
